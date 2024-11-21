@@ -31,27 +31,31 @@ namespace Project_OOP
             get { throw new NotImplementedException(); }
             private set { throw new NotImplementedException(); }
         }
-        
+        public Hospital ParentHospital
+        {
+            get { throw new NotImplementedException(); }
+        }
+
         #endregion
 
         #region Methods
 
-        public Department(string name, Staff head)
+        public Department(string name, int ID)
         { throw new NotImplementedException(); }
 
-        public Department(string name, Staff head, List<int> rooms)
+        public Department(string name, int ID, List<int> rooms)
         { throw new NotImplementedException(); }
 
-        public Department(string name, Staff head, List<Staff> staff, List<int> rooms)
+        public Department(string name, int ID, List<Staff> staff, List<int> rooms)
         { throw new NotImplementedException(); }
 
-        public void ChangeHead(Staff newHead)
+        public void ChangeHead(int newHeadID)
         { throw new NotImplementedException(); }
 
         public void ChangeName(string newName) { throw new NotImplementedException(); }
-        public void AddStaff(Staff staff) { throw new NotImplementedException(); }
-        public void RemoveStaff(int _ID) { throw new NotImplementedException(); }
-        public void TransferStaff(int _ID, Department _dep) { throw new NotImplementedException(); }
+        public void AddStaff(int ID) { throw new NotImplementedException(); }
+        public void RemoveStaff(int ID) { throw new NotImplementedException(); }
+        public void TransferStaff(int ID, Department dep) { throw new NotImplementedException(); }
         public string StaffInfo() { throw new NotImplementedException(); }
         
         #endregion

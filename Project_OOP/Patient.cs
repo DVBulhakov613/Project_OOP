@@ -48,11 +48,7 @@ namespace Project_OOP
         #endregion
 
         #region Methods - Patient-specific methods
-        public Patient(string firstName, string middleName, string lastName, DateTime birthDate)
-        { throw new NotImplementedException(); }
-        public Patient(string firstName, string middleName, string lastName, DateTime birthDate, List<MedicalRecord> medicalHistory)
-        { throw new NotImplementedException(); }
-        public Patient(string firstName, string middleName, string lastName, DateTime birthDate, List<MedicalRecord> medicalHistory, AppointmentSchedule schedule)
+        public Patient(string firstName, string middleName, string lastName, DateTime birthDate, List<MedicalRecord>? medicalHistory = null, AppointmentSchedule? schedule = null)
         { throw new NotImplementedException(); }
 
         public void AddMedicalRecord(List<Staff> staff, List<string> diagnoses, List<string> treatments, List<string> medications)

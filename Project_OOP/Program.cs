@@ -7,7 +7,7 @@ namespace Project_OOP
     {
         static void Main(string[] args)
         {
-            Patient patient = new Patient();
+            
         }
     }
 }
