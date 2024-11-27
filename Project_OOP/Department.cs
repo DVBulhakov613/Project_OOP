@@ -51,12 +51,16 @@ namespace Project_OOP
 
         public void ChangeHead(int newHeadID)
         { throw new NotImplementedException(); }
-
-        public void ChangeName(string newName) { throw new NotImplementedException(); }
-        public void AddStaff(int ID) { throw new NotImplementedException(); }
-        public void RemoveStaff(int ID) { throw new NotImplementedException(); }
-        public void TransferStaff(int ID, Department dep) { throw new NotImplementedException(); }
-        public string StaffInfo() { throw new NotImplementedException(); }
+        public void ChangeName(string newName) 
+        { throw new NotImplementedException(); }
+        public void AddStaff(int ID) 
+        { throw new NotImplementedException(); }
+        public void RemoveStaff(int ID) 
+        { throw new NotImplementedException(); }
+        public void TransferStaff(int ID, Department dep) 
+        { throw new NotImplementedException(); }
+        public string StaffInfo() 
+        { throw new NotImplementedException(); }
         
         #endregion
     }

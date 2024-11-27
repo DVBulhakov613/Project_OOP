@@ -11,11 +11,16 @@ namespace Project_OOP
     public class Hospital
     {
         #region Properties
-        private int ID;
+        public int ID
+        {
+            get { throw new NotImplementedException(); }
+            private set { throw new NotImplementedException(); }
+        }
+        public IDManagement idManager = new IDManagement();
         public string Name
         {
             get { throw new NotImplementedException(); }
-            set { throw new NotImplementedException(); }
+            private set { throw new NotImplementedException(); }
         }
         public string Location
         {
@@ -36,7 +41,7 @@ namespace Project_OOP
             get { throw new NotImplementedException(); }
             private set { throw new NotImplementedException(); }
         }
-        public List<Patient> Patient
+        public List<Patient> Patients
         {
             get { throw new NotImplementedException(); }
             private set { throw new NotImplementedException(); }
@@ -49,7 +54,9 @@ namespace Project_OOP
         #endregion
 
         #region Methods
-        public Hospital(int _ID, string name, string location, List<int> rooms, List<Department>? departments = null, List<Patient>? patient = null, List<Staff>? activeStaff = null)
+        public Hospital(string name, string location, List<int> rooms, List<Department>? departments = null, List<Patient>? patient = null, List<Staff>? activeStaff = null)
+        { throw new NotImplementedException(); }
+        public void ChangeName(string newName)
         { throw new NotImplementedException(); }
         #endregion
 
@@ -69,12 +76,12 @@ namespace Project_OOP
         #endregion
 
         #region Methods - Patient-related
-        public void AddPatient(string firstName, string middleName, string lastName, DateTime birthDate, List<MedicalRecord>? medicalHistory, AppointmentSchedule? schedule)
+        public void AddPatient(string firstName, string middleName, string lastName, DateTime birthDate, List<MedicalRecord>? medicalHistory)
         { throw new NotImplementedException(); }
-
         public void AddPatient(Patient patient)
         { throw new NotImplementedException(); }
-
+        public void TransferPatient(Patient patient)
+        { throw new NotImplementedException(); }
         #endregion
 
         #region Methods - Staff-related

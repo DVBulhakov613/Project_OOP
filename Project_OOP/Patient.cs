@@ -35,6 +35,11 @@ namespace Project_OOP
             get { throw new NotImplementedException(); }
             set { throw new NotImplementedException(); }
         }
+        public Hospital CurrentHospital
+        {
+            get { throw new NotImplementedException(); }
+            set { throw new NotImplementedException(); }
+        }
         #endregion
 
         #region Properties - Appointment info
@@ -48,10 +53,13 @@ namespace Project_OOP
         #endregion
 
         #region Methods - Patient-specific methods
-        public Patient(string firstName, string middleName, string lastName, DateTime birthDate, List<MedicalRecord>? medicalHistory = null, AppointmentSchedule? schedule = null)
+        public Patient(string firstName, string middleName, string lastName, DateTime birthDate, Hospital hospital, List<MedicalRecord>? medicalHistory = null)
         { throw new NotImplementedException(); }
 
-        public void AddMedicalRecord(List<Staff> staff, List<string> diagnoses, List<string> treatments, List<string> medications)
+        public string GenerateCompositeID()
+        { throw new NotImplementedException(); }
+
+        public void AddMedicalRecord(List<Staff> staff, List<string> diagnoses, List<string> treatments, List<string> medications, Hospital hospital)
         { throw new NotImplementedException(); }
         public void AddAppointment(int roomID, DateTime time, List<int> staffInvolved, AppointmentPurpose purpose)
         { throw new NotImplementedException(); }
@@ -62,7 +70,7 @@ namespace Project_OOP
         { throw new NotImplementedException(); }
         public void ChangeInfo()
         { throw new NotImplementedException(); }
-        public string ToString()
+        public override string ToString()
         { throw new NotImplementedException(); }
         #endregion
     }

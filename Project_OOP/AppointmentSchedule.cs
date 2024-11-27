@@ -8,7 +8,6 @@ namespace Project_OOP
 {
     public class AppointmentSchedule
     {
-        private static IDManagement idManager = new IDManagement();
         public Dictionary<int, Appointment> Appointments 
         {
             get { throw new NotImplementedException(); }

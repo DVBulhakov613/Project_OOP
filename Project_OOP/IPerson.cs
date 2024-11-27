@@ -15,6 +15,8 @@ namespace Project_OOP
         public string LastName { get; set; }
         public DateTime BirthDate { get; set; }
 
+        public Hospital CurrentHospital { get; set; }
+
         public string GetFullName();
         public void ChangeInfo();
         public string ToString();

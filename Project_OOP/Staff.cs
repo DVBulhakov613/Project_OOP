@@ -35,6 +35,11 @@ namespace Project_OOP
             get { throw new NotImplementedException(); }
             set { throw new NotImplementedException(); }
         }
+        public Hospital CurrentHospital
+        { 
+            get { throw new NotImplementedException(); } 
+            set { throw new NotImplementedException(); }
+        }
         #endregion
 
         #region Properties - Staff-specific properties
@@ -56,7 +61,7 @@ namespace Project_OOP
         #endregion
 
         #region Methods - Staff-specific
-        public Staff(string firstName, string middleName, string lastName, DateTime birthDate, List<StaffRole> roles, List<Department> departments)
+        public Staff(string firstName, string middleName, string lastName, DateTime birthDate, List<StaffRole> roles, List<Department> departments, Hospital hospital)
         { throw new NotImplementedException(); }
         public void ChangeRoles(List<StaffRole> roles)
         { throw new NotImplementedException(); }
@@ -67,7 +72,7 @@ namespace Project_OOP
         { throw new NotImplementedException(); }
         public void ChangeInfo()
         { throw new NotImplementedException(); }
-        public string ToString()
+        public override string ToString()
         { throw new NotImplementedException(); }
         #endregion
     }
