@@ -39,7 +39,6 @@ namespace Project_OOP
         #endregion
 
         #region Methods
-
         public Department(string name, int ID)
         { throw new NotImplementedException(); }
 
