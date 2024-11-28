@@ -12,6 +12,43 @@ namespace Project_Testing
         List<string?> IncorrectDepartmentNames = new() { null, " ", "", "1", "abcde12345", "      Finance"};
         List<string?> IncorrectPersonNames = new() { null, " ", "", "1", "abcde12345", "        Joe" };
 
+        public Hospital DefaultHospital_Testing()
+        {
+            return new Hospital(
+                "testName", // hospital name
+                "testLocation", // hospital location
+                new List<int> { 1, 2, 3 }); // 
+        }
+
+        public Department DefaultDepartment_Testing(Hospital parent)
+        {
+            return new Department(
+                parent, // tie to a hospital
+                CorrectDepartmentNames[0], // name of the department
+                new List<int>() { 1, 2, 3 }); // rooms of the department
+        }
+
+        public Patient DefaultPatient_Testing(Hospital parent)
+        {
+            return new Patient(
+                CorrectPersonNames[0], // first
+                CorrectPersonNames[0], // middle
+                CorrectPersonNames[0], // last names
+                DateTime.Now, // DOB
+                parent); // tie to a hospital
+        }
+
+        public Staff DefaultStaff_Testing(Hospital parent)
+        {
+            return new Staff(
+                CorrectPersonNames[0], // first
+                CorrectPersonNames[0], // middle
+                CorrectPersonNames[0], // last names
+                DateTime.Now, // DOB
+                new List<StaffRole>() { StaffRole.Administrator }, // roles
+                new List<Department>() { DefaultDepartment_Testing(parent) }, // department tie
+                parent); // hospital tie
+        }
 
         [TestMethod]
         public void Hospital_Constructor_Test()
@@ -19,16 +56,11 @@ namespace Project_Testing
             // there's not gonna be any incorrect names, other than
             // idk, an empty string or something
 
-            //string? incorrectName1 = null;
-            //string incorrectName2 = " ";
-            //string incorrectName3 = "";
-            //string incorrectName4 = "1";
-            //string incorrectName5 = "abcde12345";
-            //string incorrectName6 = $"      {CorrectHospitalNames[0]}";
-
             string location = "this can be anything in any format doesn't really matter";
 
-            // negative numbers will fuck this up, change to unsigned later i guess
+            // negative numbers will fuck this up, change to unsigned later i guess?
+            // or nah just have a check for negatives, best to do it that way to detect
+            // when they are negative
             List<int> rooms = new() { 1, 2, 3, 4, 5 };
             #region additional stuff
             //List<Department> departmentList = new() 
@@ -73,7 +105,7 @@ namespace Project_Testing
         [TestMethod]
         public void Hospital_NameChange_Test()
         {
-            Hospital testHospital = new Hospital("testName", "testLocation", new List<int>{ 1, 2, 3 });
+            Hospital testHospital = DefaultHospital_Testing();
             
             testHospital.ChangeName(CorrectHospitalNames[0]);
             Assert.AreEqual(CorrectHospitalNames[0], testHospital.Name);
@@ -93,7 +125,7 @@ namespace Project_Testing
         [TestMethod]
         public void Hospital_AddRoom_Test()
         {
-            Hospital testHospital = new Hospital("testName", "testLocation", new List<int> { 1, 2, 3 });
+            Hospital testHospital = DefaultHospital_Testing();
 
             testHospital.AddRoom(4);
             Assert.AreEqual(new List<int> { 1, 2, 3, 4 }, testHospital.Rooms);
@@ -104,7 +136,7 @@ namespace Project_Testing
         [TestMethod]
         public void Hospital_AddRooms_Test()
         {
-            Hospital testHospital = new Hospital("testName", "testLocation", new List<int> { 1, 2, 3 });
+            Hospital testHospital = DefaultHospital_Testing();
 
             testHospital.AddRooms(new List<int>() { 4, 5 });
             Assert.AreEqual(new List<int>() { 1, 2, 3, 4, 5 }, testHospital.Rooms );
@@ -117,7 +149,7 @@ namespace Project_Testing
         [TestMethod]
         public void Hospital_AddDepartment_Test()
         {
-            Hospital testHospital = new Hospital("testName", "testLocation", new List<int> { 1, 2, 3 });
+            Hospital testHospital = DefaultHospital_Testing();
 
             // incorrect name formats
             Assert.ThrowsException<NullReferenceException>(() => testHospital.AddDepartment(IncorrectDepartmentNames[0], new List<int>() { 1, 2, 3 }));
@@ -130,14 +162,14 @@ namespace Project_Testing
             Assert.ThrowsException<ArgumentException>(() => testHospital.AddDepartment(CorrectDepartmentNames[0], new List<int>() { 4, 5 }));
 
             testHospital.AddDepartment(CorrectDepartmentNames[0], new List<int>() { 1, 2, 3 });
-            Assert.AreEqual<int>(1, testHospital.Departments.Count());
+            Assert.AreEqual(1, testHospital.Departments.Count());
 
         }
 
         [TestMethod]
         public void Hospital_RemoveDepartment_Test()
         {
-            Hospital testHospital = new Hospital("testName", "testLocation", new List<int> { 1, 2, 3 });
+            Hospital testHospital = DefaultHospital_Testing();
             testHospital.AddDepartment(CorrectDepartmentNames[0], new List<int>() { 1, 2, 3 });
             testHospital.AddDepartment(CorrectDepartmentNames[1], new List<int>() { 1, 2, 3 });
             testHospital.AddDepartment(CorrectDepartmentNames[2], new List<int>() { 1, 2, 3 });
@@ -156,16 +188,67 @@ namespace Project_Testing
         }
 
         [TestMethod]
-        public void Hospital_AddPatient_Test()
+        public void Hospital_AddNewPatient_Test()
         {
-            Hospital testHospital = new Hospital("testName", "testLocation", new List<int> { 1, 2, 3 });
+            Hospital testHospital = DefaultHospital_Testing();
             testHospital.AddPatient(CorrectPersonNames[0], CorrectPersonNames[0], CorrectPersonNames[0], DateTime.Now);
 
-            Assert.AreEqual<int>(1, testHospital.Patients.Count());
+            Assert.AreEqual(1, testHospital.Patients.Count());
 
             Assert.ThrowsException<NullReferenceException>(() => testHospital.AddPatient(IncorrectPersonNames[0], IncorrectPersonNames[0], IncorrectPersonNames[0], DateTime.Now));
             Assert.ThrowsException<NullReferenceException>(() => testHospital.AddPatient(IncorrectPersonNames[1], IncorrectPersonNames[1], IncorrectPersonNames[1], DateTime.Now));
             Assert.ThrowsException<NullReferenceException>(() => testHospital.AddPatient(IncorrectPersonNames[2], IncorrectPersonNames[2], IncorrectPersonNames[2], DateTime.Now));
+            Assert.ThrowsException<ArgumentException>(() => testHospital.AddPatient(IncorrectPersonNames[3], IncorrectPersonNames[3], IncorrectPersonNames[3], DateTime.Now));
+            Assert.ThrowsException<ArgumentException>(() => testHospital.AddPatient(IncorrectPersonNames[4], IncorrectPersonNames[4], IncorrectPersonNames[4], DateTime.Now));
+            Assert.ThrowsException<ArgumentException>(() => testHospital.AddPatient(IncorrectPersonNames[5], IncorrectPersonNames[5], IncorrectPersonNames[5], DateTime.Now));
+
+            testHospital.AddPatient(CorrectPersonNames[0], CorrectPersonNames[0], CorrectPersonNames[0], DateTime.Now);
+            Assert.AreNotEqual(testHospital.Patients[0].ID, testHospital.Patients[1].ID);
+        }
+
+        [TestMethod]
+        public void Hospital_AddExistingPatient_Test()
+        {
+            Hospital testHospital = DefaultHospital_Testing();
+            testHospital.AddPatient(CorrectPersonNames[0], CorrectPersonNames[0], CorrectPersonNames[0], DateTime.Now);
+
+            Assert.AreEqual(1, testHospital.Patients.Count());
+
+            Patient patient = testHospital.Patients[0];
+
+            // can't add the same patient twice
+            Assert.ThrowsException<ArgumentException>(() => testHospital.AddPatient(patient));
+
+            // the id should stay the same across all hospitals
+            int patientID = testHospital.Patients[0].ID;
+            Hospital testHospital2 = DefaultHospital_Testing();
+            testHospital2.AddPatient(patient);
+
+            Assert.AreEqual(patientID, testHospital2.Patients[0].ID);
+        }
+
+        [TestMethod]
+        public void Hospital_TransferPatient_Test()
+        {
+            Hospital testHospital = DefaultHospital_Testing();
+            Hospital testHospital2 = DefaultHospital_Testing();
+            testHospital.AddPatient(CorrectPersonNames[0], CorrectPersonNames[0], CorrectPersonNames[0], DateTime.Now);
+
+            Assert.ThrowsException<ArgumentException>(() => testHospital.TransferPatient(testHospital.Patients[0], testHospital));
+
+            int patientID = testHospital.Patients[0].ID;
+            testHospital.TransferPatient(testHospital.Patients[0], testHospital2);
+
+            Assert.AreEqual(0, testHospital.Patients.Count());
+            Assert.AreEqual(patientID, testHospital2.Patients[0].ID);
+        }
+
+        [TestMethod]
+        public void Hospital_AddNewStaff_Test()
+        {
+            Hospital testHospital = DefaultHospital_Testing();
+            testHospital.AddStaff(CorrectPersonNames[0], CorrectPersonNames[0], CorrectPersonNames[0], DateTime.Now, new List<StaffRole>() { StaffRole.Administrator }, new List<Department>());
+
         }
     }
 }

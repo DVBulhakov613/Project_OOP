@@ -80,7 +80,7 @@ namespace Project_OOP
         { throw new NotImplementedException(); }
         public void AddPatient(Patient patient)
         { throw new NotImplementedException(); }
-        public void TransferPatient(Patient patient)
+        public void TransferPatient(Patient patient, Hospital target)
         { throw new NotImplementedException(); }
         #endregion
 

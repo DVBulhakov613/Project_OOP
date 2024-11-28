@@ -14,7 +14,7 @@ namespace Project_OOP
             get { throw new NotImplementedException(); }
             set { throw new NotImplementedException(); }
         }
-        public static IDManagement idManager = new IDManagement();
+        public static IDManagement IDManager = new IDManagement();
         public string FirstName
         {
             get { throw new NotImplementedException(); }

@@ -14,7 +14,7 @@ namespace Project_OOP
             get { throw new NotImplementedException(); }
             set { throw new NotImplementedException(); }
         }
-        public static IDManagement idManager = new IDManagement();
+        public static IDManagement IDManager = new IDManagement();
         public string FirstName
         {
             get { throw new NotImplementedException(); }
@@ -61,7 +61,7 @@ namespace Project_OOP
         #endregion
 
         #region Methods - Staff-specific
-        public Staff(string firstName, string middleName, string lastName, DateTime birthDate, List<StaffRole> roles, List<Department> departments, Hospital? hospital = null)
+        public Staff(string firstName, string middleName, string lastName, DateTime birthDate, List<StaffRole> roles, List<Department> departments, Hospital hospital)
         { throw new NotImplementedException(); }
         public void ChangeRoles(List<StaffRole> roles)
         { throw new NotImplementedException(); }
