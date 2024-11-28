@@ -1,4 +1,4 @@
-using Project_OOP;
+using Project_OOP_WPF;
 namespace Project_Testing
 {
     [TestClass]
