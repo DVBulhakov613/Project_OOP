@@ -68,7 +68,7 @@ namespace Project_OOP
         #endregion
 
         #region Methods - Department-related
-        public void AddDepartment(string name, Staff? head, List<int> rooms)
+        public void AddDepartment(string name, List<int> rooms, Staff? head = null, List<Staff>? staff = null)
         { throw new NotImplementedException(); }
 
         public void RemoveDepartment(string name)

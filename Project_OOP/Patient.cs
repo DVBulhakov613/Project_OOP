@@ -53,7 +53,7 @@ namespace Project_OOP
         #endregion
 
         #region Methods - Patient-specific methods
-        public Patient(string firstName, string middleName, string lastName, DateTime birthDate, Hospital hospital, List<MedicalRecord>? medicalHistory = null)
+        public Patient(string firstName, string middleName, string lastName, DateTime birthDate, Hospital? hospital = null, List<MedicalRecord>? medicalHistory = null)
         { throw new NotImplementedException(); }
 
         public string GenerateCompositeID()

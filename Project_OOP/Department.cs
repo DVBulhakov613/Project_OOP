@@ -34,18 +34,13 @@ namespace Project_OOP
         public Hospital ParentHospital
         {
             get { throw new NotImplementedException(); }
+            private set { throw new NotImplementedException(); }
         }
 
         #endregion
 
         #region Methods
-        public Department(string name, int ID)
-        { throw new NotImplementedException(); }
-
-        public Department(string name, int ID, List<int> rooms)
-        { throw new NotImplementedException(); }
-
-        public Department(string name, int ID, List<Staff> staff, List<int> rooms)
+        public Department(Hospital parent, string name, List<int> rooms, Staff? head = null, List<Staff>? staff = null)
         { throw new NotImplementedException(); }
 
         public void ChangeHead(int newHeadID)

@@ -61,7 +61,7 @@ namespace Project_OOP
         #endregion
 
         #region Methods - Staff-specific
-        public Staff(string firstName, string middleName, string lastName, DateTime birthDate, List<StaffRole> roles, List<Department> departments, Hospital hospital)
+        public Staff(string firstName, string middleName, string lastName, DateTime birthDate, List<StaffRole> roles, List<Department> departments, Hospital? hospital = null)
         { throw new NotImplementedException(); }
         public void ChangeRoles(List<StaffRole> roles)
         { throw new NotImplementedException(); }
