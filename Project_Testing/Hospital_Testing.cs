@@ -10,6 +10,7 @@ namespace Project_Testing
         
         List<string?> IncorrectHospitalNames = new() { null, " ", "", "1", "abcde12345", "      Cityscape Medical Center" };
         List<string?> IncorrectDepartmentNames = new() { null, " ", "", "1", "abcde12345", "      Finance"};
+        List<string?> IncorrectPersonNames = new() { null, " ", "", "1", "abcde12345", "        Joe" };
 
 
         [TestMethod]
@@ -128,6 +129,43 @@ namespace Project_Testing
             // cannot add rooms that do not exist within the hospital
             Assert.ThrowsException<ArgumentException>(() => testHospital.AddDepartment(CorrectDepartmentNames[0], new List<int>() { 4, 5 }));
 
+            testHospital.AddDepartment(CorrectDepartmentNames[0], new List<int>() { 1, 2, 3 });
+            Assert.AreEqual<int>(1, testHospital.Departments.Count());
+
+        }
+
+        [TestMethod]
+        public void Hospital_RemoveDepartment_Test()
+        {
+            Hospital testHospital = new Hospital("testName", "testLocation", new List<int> { 1, 2, 3 });
+            testHospital.AddDepartment(CorrectDepartmentNames[0], new List<int>() { 1, 2, 3 });
+            testHospital.AddDepartment(CorrectDepartmentNames[1], new List<int>() { 1, 2, 3 });
+            testHospital.AddDepartment(CorrectDepartmentNames[2], new List<int>() { 1, 2, 3 });
+
+            Assert.AreEqual(3, testHospital.Departments.Count());
+
+            Assert.ThrowsException<NullReferenceException>(() => testHospital.RemoveDepartment(IncorrectDepartmentNames[0]));
+            Assert.ThrowsException<NullReferenceException>(() => testHospital.RemoveDepartment(IncorrectDepartmentNames[1]));
+            Assert.ThrowsException<NullReferenceException>(() => testHospital.RemoveDepartment(IncorrectDepartmentNames[2]));
+            Assert.ThrowsException<ArgumentException>(() => testHospital.RemoveDepartment(IncorrectDepartmentNames[3]));
+
+            testHospital.RemoveDepartment(CorrectDepartmentNames[0]);
+
+            Assert.AreEqual(2, testHospital.Departments.Count());
+            Assert.ThrowsException<ArgumentException>(() => testHospital.RemoveDepartment(CorrectDepartmentNames[0]));
+        }
+
+        [TestMethod]
+        public void Hospital_AddPatient_Test()
+        {
+            Hospital testHospital = new Hospital("testName", "testLocation", new List<int> { 1, 2, 3 });
+            testHospital.AddPatient(CorrectPersonNames[0], CorrectPersonNames[0], CorrectPersonNames[0], DateTime.Now);
+
+            Assert.AreEqual<int>(1, testHospital.Patients.Count());
+
+            Assert.ThrowsException<NullReferenceException>(() => testHospital.AddPatient(IncorrectPersonNames[0], IncorrectPersonNames[0], IncorrectPersonNames[0], DateTime.Now));
+            Assert.ThrowsException<NullReferenceException>(() => testHospital.AddPatient(IncorrectPersonNames[1], IncorrectPersonNames[1], IncorrectPersonNames[1], DateTime.Now));
+            Assert.ThrowsException<NullReferenceException>(() => testHospital.AddPatient(IncorrectPersonNames[2], IncorrectPersonNames[2], IncorrectPersonNames[2], DateTime.Now));
         }
     }
 }

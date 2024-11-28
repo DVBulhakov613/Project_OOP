@@ -76,7 +76,7 @@ namespace Project_OOP
         #endregion
 
         #region Methods - Patient-related
-        public void AddPatient(string firstName, string middleName, string lastName, DateTime birthDate, List<MedicalRecord>? medicalHistory)
+        public void AddPatient(string firstName, string middleName, string lastName, DateTime birthDate, List<MedicalRecord>? medicalHistory = null)
         { throw new NotImplementedException(); }
         public void AddPatient(Patient patient)
         { throw new NotImplementedException(); }
