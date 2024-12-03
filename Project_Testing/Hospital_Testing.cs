@@ -4,15 +4,16 @@ namespace Project_Testing
     [TestClass]
     public class Hospital_Testing
     {
-        List<string> CorrectHospitalNames = new() { "Cityscape Medical Center", "Comfort Haven Clinic", "Beyondlimit Wellness" }; // used for CORRECT hospital names
-        List<string> CorrectDepartmentNames = new() { "Finance", "Surgery", "ER", "Radiology", "Laboratory", "Psychiatry" }; // used for CORRECT department names
-        List<string> CorrectPersonNames = new() { "Joe", "Jill", "Andrey", "John", "Vasiliy", "Robert", "Bob"}; // used for CORRECT first, middle, and last names
+        #region Static members (testing parameters)
+        static List<string> CorrectHospitalNames = new() { "Cityscape Medical Center", "Comfort Haven Clinic", "Beyondlimit Wellness" }; // used for CORRECT hospital names
+        static List<string> CorrectDepartmentNames = new() { "Finance", "Surgery", "ER", "Radiology", "Laboratory", "Psychiatry" }; // used for CORRECT department names
+        static List<string> CorrectPersonNames = new() { "Joe", "Jill", "Andrey", "John", "Vasiliy", "Robert", "Bob"}; // used for CORRECT first, middle, and last names
         
-        List<string?> IncorrectHospitalNames = new() { null, " ", "", "1", "abcde12345", "      Cityscape Medical Center" };
-        List<string?> IncorrectDepartmentNames = new() { null, " ", "", "1", "abcde12345", "      Finance"};
-        List<string?> IncorrectPersonNames = new() { null, " ", "", "1", "abcde12345", "        Joe" };
+        static List<string?> IncorrectHospitalNames = new() { null, " ", "", "1", "abcde12345", "      Cityscape Medical Center" };
+        static List<string?> IncorrectDepartmentNames = new() { null, " ", "", "1", "abcde12345", "      Finance"};
+        static List<string?> IncorrectPersonNames = new() { null, " ", "", "1", "abcde12345", "        Joe" };
 
-        public Hospital DefaultHospital_Testing()
+        static public Hospital DefaultHospital_Testing()
         {
             return new Hospital(
                 "testName", // hospital name
@@ -20,7 +21,7 @@ namespace Project_Testing
                 new List<int> { 1, 2, 3 }); // 
         }
 
-        public Department DefaultDepartment_Testing(Hospital parent)
+        static public Department DefaultDepartment_Testing(Hospital parent)
         {
             return new Department(
                 parent, // tie to a hospital
@@ -28,7 +29,7 @@ namespace Project_Testing
                 new List<int>() { 1, 2, 3 }); // rooms of the department
         }
 
-        public Patient DefaultPatient_Testing(Hospital parent)
+        static public Patient DefaultPatient_Testing(Hospital parent)
         {
             return new Patient(
                 CorrectPersonNames[0], // first
@@ -38,7 +39,7 @@ namespace Project_Testing
                 parent); // tie to a hospital
         }
 
-        public Staff DefaultStaff_Testing(Hospital parent)
+        static public Staff DefaultStaff_Testing(Hospital parent)
         {
             return new Staff(
                 CorrectPersonNames[0], // first
@@ -49,6 +50,7 @@ namespace Project_Testing
                 new List<Department>() { DefaultDepartment_Testing(parent) }, // department tie
                 parent); // hospital tie
         }
+        #endregion
 
         [TestMethod]
         public void Hospital_Constructor_Test()
@@ -201,6 +203,8 @@ namespace Project_Testing
             Assert.ThrowsException<ArgumentException>(() => testHospital.AddPatient(IncorrectPersonNames[3], IncorrectPersonNames[3], IncorrectPersonNames[3], DateTime.Now));
             Assert.ThrowsException<ArgumentException>(() => testHospital.AddPatient(IncorrectPersonNames[4], IncorrectPersonNames[4], IncorrectPersonNames[4], DateTime.Now));
             Assert.ThrowsException<ArgumentException>(() => testHospital.AddPatient(IncorrectPersonNames[5], IncorrectPersonNames[5], IncorrectPersonNames[5], DateTime.Now));
+            Assert.ThrowsException<ArgumentException>(() => testHospital.AddPatient(CorrectPersonNames[0], CorrectPersonNames[0], CorrectPersonNames[0], DateTime.Now.AddYears(-100)));
+            Assert.ThrowsException<ArgumentException>(() => testHospital.AddPatient(CorrectPersonNames[0], CorrectPersonNames[0], CorrectPersonNames[0], DateTime.Now.AddYears(100)));
 
             testHospital.AddPatient(CorrectPersonNames[0], CorrectPersonNames[0], CorrectPersonNames[0], DateTime.Now);
             Assert.AreNotEqual(testHospital.Patients[0].ID, testHospital.Patients[1].ID);
@@ -248,6 +252,57 @@ namespace Project_Testing
         {
             Hospital testHospital = DefaultHospital_Testing();
             testHospital.AddStaff(CorrectPersonNames[0], CorrectPersonNames[0], CorrectPersonNames[0], DateTime.Now, new List<StaffRole>() { StaffRole.Administrator }, new List<Department>());
+
+            Assert.AreEqual(1, testHospital.ActiveStaff.Count());
+
+            Assert.ThrowsException<NullReferenceException>(() => testHospital.AddStaff(IncorrectPersonNames[0], IncorrectPersonNames[0], IncorrectPersonNames[0], DateTime.Now, new List<StaffRole>() { StaffRole.Administrator }, new List<Department>()));
+            Assert.ThrowsException<NullReferenceException>(() => testHospital.AddStaff(IncorrectPersonNames[1], IncorrectPersonNames[1], IncorrectPersonNames[1], DateTime.Now, new List<StaffRole>() { StaffRole.Administrator }, new List<Department>()));
+            Assert.ThrowsException<NullReferenceException>(() => testHospital.AddStaff(IncorrectPersonNames[2], IncorrectPersonNames[2], IncorrectPersonNames[2], DateTime.Now, new List<StaffRole>() { StaffRole.Administrator }, new List<Department>()));
+            Assert.ThrowsException<NullReferenceException>(() => testHospital.AddStaff(CorrectPersonNames[0], CorrectPersonNames[0], CorrectPersonNames[0], DateTime.Now, new List<StaffRole>() {  }, new List<Department>()));
+            Assert.ThrowsException<NullReferenceException>(() => testHospital.AddStaff(CorrectPersonNames[1], CorrectPersonNames[1], CorrectPersonNames[1], DateTime.Now, new List<StaffRole>() {  }, new List<Department>()));
+            Assert.ThrowsException<NullReferenceException>(() => testHospital.AddStaff(CorrectPersonNames[2], CorrectPersonNames[2], CorrectPersonNames[2], DateTime.Now, new List<StaffRole>() {  }, new List<Department>()));
+            Assert.ThrowsException<ArgumentException>(() => testHospital.AddStaff(IncorrectPersonNames[3], IncorrectPersonNames[3], IncorrectPersonNames[3], DateTime.Now, new List<StaffRole>() { StaffRole.Administrator }, new List<Department>()));
+            Assert.ThrowsException<ArgumentException>(() => testHospital.AddStaff(IncorrectPersonNames[4], IncorrectPersonNames[4], IncorrectPersonNames[4], DateTime.Now, new List<StaffRole>() { StaffRole.Administrator }, new List<Department>()));
+            Assert.ThrowsException<ArgumentException>(() => testHospital.AddStaff(IncorrectPersonNames[5], IncorrectPersonNames[5], IncorrectPersonNames[5], DateTime.Now, new List<StaffRole>() { StaffRole.Administrator }, new List<Department>()));
+
+            testHospital.AddStaff(CorrectPersonNames[0], CorrectPersonNames[0], CorrectPersonNames[0], DateTime.Now, new List<StaffRole>() { StaffRole.Administrator }, new List<Department>());
+            Assert.AreNotEqual(testHospital.ActiveStaff[0].ID, testHospital.ActiveStaff[1].ID);
+        }
+
+        [TestMethod]
+        public void Hospital_AddExistingStaff_Test()
+        {
+            Hospital testHospital = DefaultHospital_Testing();
+            testHospital.AddStaff(DefaultStaff_Testing(testHospital));
+
+            Assert.AreEqual(1, testHospital.ActiveStaff.Count());
+
+            testHospital.AddStaff(DefaultStaff_Testing(testHospital));
+            Assert.AreNotEqual(testHospital.ActiveStaff[0].ID, testHospital.ActiveStaff[1].ID);
+        }
+
+        [TestMethod]
+        public void Hospital_RemoveStaff_Test()
+        {
+            Hospital testHospital = DefaultHospital_Testing();
+            testHospital.AddStaff(DefaultStaff_Testing(testHospital));
+
+            Assert.ThrowsException<ArgumentException>(() => testHospital.RemoveStaff(-1));
+            Assert.ThrowsException<ArgumentException>(() => testHospital.RemoveStaff(10));
+
+            testHospital.AddStaff(DefaultStaff_Testing(testHospital));
+            testHospital.RemoveStaff(0);
+
+            Assert.AreEqual(1, testHospital.ActiveStaff[0].ID);
+        }
+    }
+
+    [TestClass]
+    public class Department_Testing
+    {
+        [TestMethod]
+        public void Department_Constructor_Test()
+        {
 
         }
     }
