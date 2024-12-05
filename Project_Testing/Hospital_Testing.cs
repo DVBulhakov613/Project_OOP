@@ -61,6 +61,16 @@ namespace Project_Testing
             ["        Joe"]
         };
 
+        public static IEnumerable<string>[] IncorrectMedicalRecordInfo =
+        {
+            [null],
+            [" "],
+            [""],
+            ["1"],
+            ["abcde12345"],
+            ["      boo"]
+        };
+
         public static void TestCleanup()
         {
             Staff.IDManager = new IDManagement();
@@ -580,47 +590,94 @@ namespace Project_Testing
             TestUtilities.TestCleanup();
         }
 
-        [TestMethod]
-        public void Staff_Constructor_ValidParameters()
+        [DataTestMethod]
+        [DynamicData(nameof(TestUtilities.CorrectPersonNames), typeof(TestUtilities))]
+        public void Staff_Constructor_ValidParameters(string CorrectNames)
         {
-
+            Hospital testHospital = TestUtilities.DefaultHospital_Testing();
+            Staff testStaff = new Staff(CorrectNames, CorrectNames, CorrectNames, DateTime.Now, new List<StaffRole> { StaffRole.Administrator }, testHospital);
+            Assert.AreEqual(CorrectNames, testStaff.FirstName, "Somehow assigning a wrong first name");
+            Assert.AreEqual(CorrectNames, testStaff.MiddleName, "Somehow assigning a wrong middle name");
+            Assert.AreEqual(CorrectNames, testStaff.LastName, "Somehow assigning a wrong last name");
         }
 
-        [TestMethod]
-        public void Staff_Constructor_InvalidParameters()
+        [DataTestMethod]
+        [DynamicData(nameof(TestUtilities.IncorrectPersonNames), typeof(TestUtilities))]
+        public void Staff_Constructor_InvalidParameters(string IncorrectNames)
         {
+            Hospital testHospital = TestUtilities.DefaultHospital_Testing();
+            if (string.IsNullOrWhiteSpace(IncorrectNames))
+            {
+                Assert.ThrowsException<NullReferenceException>(() => new Staff(IncorrectNames, "CorrectName", "CorrectName", DateTime.Now, new List<StaffRole> { StaffRole.Administrator }, testHospital), "Not checking for empty strings in first name");
+                Assert.ThrowsException<NullReferenceException>(() => new Staff("CorrectName", IncorrectNames, "CorrectName", DateTime.Now, new List<StaffRole> { StaffRole.Administrator }, testHospital), "Not checking for empty strings in middle name");
+                Assert.ThrowsException<NullReferenceException>(() => new Staff("CorrectName", "CorrectName", IncorrectNames, DateTime.Now, new List<StaffRole> { StaffRole.Administrator }, testHospital), "Not checking for empty strings in last name");
+            }
+            else
+            {
+                Assert.ThrowsException<ArgumentException>(() => new Staff(IncorrectNames, "CorrectName", "CorrectName", DateTime.Now, new List<StaffRole> { StaffRole.Administrator }, testHospital), "Allowing wrong format on first name");
+                Assert.ThrowsException<ArgumentException>(() => new Staff("CorrectName", IncorrectNames, "CorrectName", DateTime.Now, new List<StaffRole> { StaffRole.Administrator }, testHospital), "Allowing wrong format on middle name");
+                Assert.ThrowsException<ArgumentException>(() => new Staff("CorrectName", "CorrectName", IncorrectNames, DateTime.Now, new List<StaffRole> { StaffRole.Administrator }, testHospital), "Allowing wrong format on last name");
+            }
 
+            Assert.ThrowsException<ArgumentException>(() => new Staff("CorrectName", "CorrectName", "CorrectName", DateTime.Now.AddYears(1), new List<StaffRole> { StaffRole.Administrator }, testHospital), "Not checking for DOB range");
+            Assert.ThrowsException<ArgumentException>(() => new Staff("CorrectName", "CorrectName", "CorrectName", DateTime.Now.AddYears(-120), new List<StaffRole> { StaffRole.Administrator }, testHospital), "Not checking for DOB range");
+            Assert.ThrowsException<ArgumentException>(() => new Staff("CorrectName", "CorrectName", "CorrectName", DateTime.Now, new List<StaffRole> { }, testHospital), "Not checking for empty role assignments");
+
+            Assert.AreEqual(0, Staff.IDManager.GenerateID(), "Adding ID's despite incorrect object creation");
         }
 
         [TestMethod]
         public void Staff_ChangeRoles_ValidParameters()
         {
+            Hospital testHospital = TestUtilities.DefaultHospital_Testing();
+            Staff testStaff = TestUtilities.DefaultStaff_Testing(testHospital);
+            List<StaffRole> currentStaffRoles = testStaff.Roles;
 
-        }
+            testStaff.ChangeRoles(new List<StaffRole>() { StaffRole.Therapist });
 
-        [TestMethod]
-        public void Staff_ChangeRoles_InvalidParameters()
-        {
-
+            Assert.AreNotEqual(currentStaffRoles, testStaff.Roles, "Not assigning the staff roles correctly");
         }
 
         [TestMethod]
         public void Staff_GetFullName_Test()
         {
+            Hospital testHospital = TestUtilities.DefaultHospital_Testing();
+            Staff testStaff = TestUtilities.DefaultStaff_Testing(testHospital);
 
+            Assert.AreEqual($"DefaultName DefaultName DefaultName", testStaff.GetFullName(), "Probably incorrect output format");
         }
 
         [TestMethod]
-        public void Staff_ChangeInfo_InvalidParameters()
+        public void Staff_ChangeInfo_ValidParameters()
         {
+            Hospital testHospital = TestUtilities.DefaultHospital_Testing();
+            Staff testStaff = TestUtilities.DefaultStaff_Testing(testHospital);
+
+            DateTime staffDOB = testStaff.BirthDate;
+            DateTime time = DateTime.Now.AddYears(-5);
+            testStaff.ChangeInfo("DefaultName2", "DefaultName2", "DefaultName2", time);
+
+            Assert.AreEqual("DefaultName2", testStaff.FirstName, "Not assigning a new first name");
+            Assert.AreEqual("DefaultName2", testStaff.MiddleName, "Not assigning a new middle name");
+            Assert.AreEqual("DefaultName2", testStaff.LastName, "Not assigning a new last name");
+            Assert.AreNotEqual(staffDOB, testStaff.BirthDate, "Not assigning a new date of birth");
 
         }
 
-        [TestMethod]
-        public void Staff_ToString_Test()
+        [DataTestMethod]
+        [DynamicData(nameof(TestUtilities.IncorrectPersonNames), typeof(TestUtilities))]
+        public void Staff_ChangeInfo_InvalidParameters(string names)
         {
+            Hospital testHospital = TestUtilities.DefaultHospital_Testing();
+            Staff testStaff = TestUtilities.DefaultStaff_Testing(testHospital);
 
+            Assert.ThrowsException<ArgumentException>(() => testStaff.ChangeInfo(names, "CorrectName", "CorrectName", DateTime.Now), "Not checking format for first name");
+            Assert.ThrowsException<ArgumentException>(() => testStaff.ChangeInfo("CorrectName", names, "CorrectName", DateTime.Now), "Not checking format for middle name");
+            Assert.ThrowsException<ArgumentException>(() => testStaff.ChangeInfo("CorrectName", "CorrectName", names, DateTime.Now), "Not checking format for last name");
+            Assert.ThrowsException<ArgumentException>(() => testStaff.ChangeInfo("CorrectName", "CorrectName", "CorrectName", DateTime.Now.AddYears(-120)));
+            Assert.ThrowsException<ArgumentException>(() => testStaff.ChangeInfo("CorrectName", "CorrectName", "CorrectName", DateTime.Now.AddYears(1)));
         }
+        // there should also be a ToString() test but im not sure of what the format should be just yet
     }
 
     [TestClass]
@@ -632,33 +689,183 @@ namespace Project_Testing
             TestUtilities.TestCleanup();
         }
 
-        [TestMethod]
-        public void Patient_Constructor_ValidParameters()
+        [DataTestMethod]
+        [DynamicData(nameof(TestUtilities.CorrectPersonNames), typeof(TestUtilities))]
+        public void Patient_Constructor_ValidParameters(string CorrectNames)
         {
+            Hospital testHospital = TestUtilities.DefaultHospital_Testing();
+            Patient testPatient = new Patient(CorrectNames, CorrectNames, CorrectNames, DateTime.Now, testHospital);
+            Assert.AreEqual(CorrectNames, testPatient.FirstName, "Somehow assigning a wrong first name");
+            Assert.AreEqual(CorrectNames, testPatient.MiddleName, "Somehow assigning a wrong middle name");
+            Assert.AreEqual(CorrectNames, testPatient.LastName, "Somehow assigning a wrong last name");
+        }
 
+        [DataTestMethod]
+        [DynamicData(nameof(TestUtilities.IncorrectPersonNames), typeof(TestUtilities))]
+        public void Patient_Constructor_InvalidParameters(string IncorrectNames)
+        {
+            Hospital testHospital = TestUtilities.DefaultHospital_Testing();
+            if (string.IsNullOrWhiteSpace(IncorrectNames))
+            {
+                Assert.ThrowsException<NullReferenceException>(() => new Patient(IncorrectNames, "CorrectName", "CorrectName", DateTime.Now, testHospital), "Not checking for empty strings in first name");
+                Assert.ThrowsException<NullReferenceException>(() => new Patient(IncorrectNames, "CorrectName", "CorrectName", DateTime.Now, testHospital), "Not checking for empty strings in middle name");
+                Assert.ThrowsException<NullReferenceException>(() => new Patient(IncorrectNames, "CorrectName", "CorrectName", DateTime.Now, testHospital), "Not checking for empty strings in last name");
+            }
+            else
+            {
+                Assert.ThrowsException<ArgumentException>(() => new Patient(IncorrectNames, "CorrectName", "CorrectName", DateTime.Now, testHospital), "Allowing wrong format on first name");
+                Assert.ThrowsException<ArgumentException>(() => new Patient(IncorrectNames, "CorrectName", "CorrectName", DateTime.Now, testHospital), "Allowing wrong format on middle name");
+                Assert.ThrowsException<ArgumentException>(() => new Patient(IncorrectNames, "CorrectName", "CorrectName", DateTime.Now, testHospital), "Allowing wrong format on last name");
+            }
+
+            Assert.ThrowsException<ArgumentException>(() => new Patient("CorrectName", "CorrectName", "CorrectName", DateTime.Now.AddYears(1), testHospital), "Not checking for DOB range");
+            Assert.ThrowsException<ArgumentException>(() => new Patient("CorrectName", "CorrectName", "CorrectName", DateTime.Now.AddYears(-120), testHospital), "Not checking for DOB range");
+            Assert.ThrowsException<ArgumentException>(() => new Patient("CorrectName", "CorrectName", "CorrectName", DateTime.Now, testHospital), "Not checking for empty role assignments");
+
+            Assert.AreEqual(0, Patient.IDManager.GenerateID(), "Adding ID's despite incorrect object creation");
         }
 
         [TestMethod]
-        public void Patient_Constructor_InvalidParameters()
+        public void Patient_GenerateCompositeID_Test()
         {
+            Hospital testHospital = TestUtilities.DefaultHospital_Testing();
+            Patient testPatient = TestUtilities.DefaultPatient_Testing(testHospital);
 
+            DateTime testDate = DateTime.Now;
+            string result = testPatient.GenerateCompositeID(testDate);
+            string expected = $"0-{testDate.Year}:{testDate.Month:D2}:{testDate.Day:D2}:{testDate.Hour:D2}";
+            Assert.AreEqual(expected, result, "Incorrect ID format");
+
+            result = testPatient.GenerateCompositeID(testDate);
+            expected = $"1-{testDate.Year}:{testDate.Month:D2}:{testDate.Day:D2}:{testDate.Hour:D2}";
+
+            Assert.AreEqual(expected, result, "Incorrect ID numeration");
         }
 
         [TestMethod]
         public void Patient_AddMedicalRecord_ValidParameters()
         {
+            Hospital testHospital = TestUtilities.DefaultHospital_Testing();
+            testHospital.AddStaff(new Staff("CorrectName", "CorrectName", "CorrectName", DateTime.Now, new List<StaffRole> { StaffRole.Administrator }, testHospital));
+            Patient testPatient = TestUtilities.DefaultPatient_Testing(testHospital);
 
+            DateTime testDate = DateTime.Now;
+            testPatient.AddMedicalRecord(
+                new List<Staff> { testHospital.ActiveStaff[0] },
+                new List<string> { "diagnoses" },
+                new List<string> { "treatments" },
+                new List<string> { "medications" },
+                testDate);
+            string expectedCompositeID = $"0-{testDate.Year}:{testDate.Month:D2}:{testDate.Day:D2}:{testDate.Hour:D2}";
+            
+            Assert.AreEqual(expectedCompositeID, testPatient.MedicalHistory.First().Key, "Incorrect composite key generation");
+            Assert.AreEqual(new List<Staff> { testHospital.ActiveStaff[0] }, testPatient.MedicalHistory.First().Value.ParticipatingStaff, "Incorrect staff assignment");
+            Assert.AreEqual(new List<string> { "diagnoses" }, testPatient.MedicalHistory.First().Value.Diagnoses, "Incorrect diagnoses assignment");
+            Assert.AreEqual(new List<string> { "treatments" }, testPatient.MedicalHistory.First().Value.Treatments, "Incorrect treatments assignment");
+            Assert.AreEqual(new List<string> { "medications" }, testPatient.MedicalHistory.First().Value.Medications, "Incorrect medications assignment");
         }
 
-        [TestMethod]
-        public void Patient_AddMedicalRecord_InvalidParameters()
+        [DataTestMethod]
+        [DynamicData(nameof(TestUtilities.IncorrectMedicalRecordInfo), typeof(TestUtilities))]
+        public void Patient_AddMedicalRecord_InvalidParameters(string invalidMedRecInfo)
         {
+            Hospital testHospital = TestUtilities.DefaultHospital_Testing();
+            testHospital.AddStaff(new Staff("CorrectName", "CorrectName", "CorrectName", DateTime.Now, new List<StaffRole> { StaffRole.Administrator }, testHospital));
+            Patient testPatient = TestUtilities.DefaultPatient_Testing(testHospital);
 
+            DateTime testDate = DateTime.Now;
+            Assert.ThrowsException<ArgumentException>(
+                () => testPatient.AddMedicalRecord(
+                        new List<Staff> { },
+                        new List<string> { "diagnoses" },
+                        new List<string> { "treatments" },
+                        new List<string> { "medications" },
+                        testDate )
+                , "Not checking for empty staff list");
+            Assert.ThrowsException<ArgumentException>(
+                () => testPatient.AddMedicalRecord(
+                        new List<Staff> { },
+                        new List<string> { "diagnoses" },
+                        new List<string> { "treatments" },
+                        new List<string> { "medications" },
+                        DateTime.Now.AddYears(1))
+                , "Not checking for date value range");
+            Assert.ThrowsException<ArgumentException>(
+                () => testPatient.AddMedicalRecord(
+                        new List<Staff> { },
+                        new List<string> { "diagnoses" },
+                        new List<string> { "treatments" },
+                        new List<string> { "medications" },
+                        DateTime.Now.AddHours(1))
+                , "Not checking for date value range");
+
+            if (string.IsNullOrEmpty(invalidMedRecInfo))
+            {
+                Assert.ThrowsException<NullReferenceException>(
+                    () => testPatient.AddMedicalRecord(
+                            new List<Staff> { testHospital.ActiveStaff[0] },
+                            new List<string> { invalidMedRecInfo },
+                            new List<string> { "treatments" },
+                            new List<string> { "medications" },
+                            testDate)
+                    , "Not checking for empty diagnoses list");
+
+                Assert.ThrowsException<NullReferenceException>(
+                    () => testPatient.AddMedicalRecord(
+                            new List<Staff> { testHospital.ActiveStaff[0] },
+                            new List<string> { "diagnoses" },
+                            new List<string> { invalidMedRecInfo },
+                            new List<string> { "medications" },
+                            testDate)
+                    , "Not checking for empty treatments list");
+
+                Assert.ThrowsException<NullReferenceException>(
+                    () => testPatient.AddMedicalRecord(
+                            new List<Staff> { testHospital.ActiveStaff[0] },
+                            new List<string> { "diagnoses" },
+                            new List<string> { "treatments" },
+                            new List<string> { invalidMedRecInfo },
+                            testDate)
+                    , "Not checking for empty medications list");
+            }
+            else
+            {
+                Assert.ThrowsException<ArgumentException>(
+                    () => testPatient.AddMedicalRecord(
+                            new List<Staff> { testHospital.ActiveStaff[0] },
+                            new List<string> { invalidMedRecInfo },
+                            new List<string> { "treatments" },
+                            new List<string> { "medications" },
+                            testDate)
+                    , "Not checking for invalid diagnoses format");
+
+                Assert.ThrowsException<ArgumentException>(
+                    () => testPatient.AddMedicalRecord(
+                            new List<Staff> { testHospital.ActiveStaff[0] },
+                            new List<string> { "diagnoses" },
+                            new List<string> { invalidMedRecInfo },
+                            new List<string> { "medications" },
+                            testDate)
+                    , "Not checking for invalid treatments format");
+
+                Assert.ThrowsException<ArgumentException>(
+                    () => testPatient.AddMedicalRecord(
+                            new List<Staff> { testHospital.ActiveStaff[0] },
+                            new List<string> { "diagnoses" },
+                            new List<string> { "treatments" },
+                            new List<string> { invalidMedRecInfo },
+                            testDate)
+                    , "Not checking for invalid medications format");
+            }
         }
 
         [TestMethod]
         public void Patient_AddAppointment_ValidParameters()
         {
+            Hospital testHospital = TestUtilities.DefaultHospital_Testing();
+            testHospital.AddStaff(new Staff("CorrectName", "CorrectName", "CorrectName", DateTime.Now, new List<StaffRole> { StaffRole.Administrator }, testHospital));
+            Patient testPatient = TestUtilities.DefaultPatient_Testing(testHospital);
+
 
         }
 
