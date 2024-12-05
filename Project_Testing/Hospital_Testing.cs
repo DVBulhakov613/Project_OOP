@@ -12,59 +12,59 @@ namespace Project_Testing
 
         public static IEnumerable<string>[] IncorrectHospitalNames =
         {
-            [null], 
-            [" "], 
-            [""], 
-            ["1"], 
-            ["abcde12345"], 
+            [null],
+            [" "],
+            [""],
+            ["1"],
+            ["abcde12345"],
             ["      Cityscape Medical Center"]
         };
 
         public static IEnumerable<string>[] CorrectDepartmentNames =
         {
-            ["Finance"], 
-            ["Surgery"], 
-            ["ER"], 
-            ["Radiology"], 
-            ["Laboratory"], 
+            ["Finance"],
+            ["Surgery"],
+            ["ER"],
+            ["Radiology"],
+            ["Laboratory"],
             ["Psychiatry"]
         };
 
         public static IEnumerable<string>[] IncorrectDepartmentNames =
         {
-            [null], 
-            [" "], 
-            [""], 
-            ["1"], 
-            ["abcde12345"], 
+            [null],
+            [" "],
+            [""],
+            ["1"],
+            ["abcde12345"],
             ["      Finance"]
         };
 
         public static IEnumerable<string>[] CorrectPersonNames =
         {
-            ["Joe"], 
-            ["Jill"], 
-            ["Andrey"], 
-            ["John"], 
-            ["Vasiliy"], 
-            ["Robert"], 
+            ["Joe"],
+            ["Jill"],
+            ["Andrey"],
+            ["John"],
+            ["Vasiliy"],
+            ["Robert"],
             ["Bob"]
         };
 
         public static IEnumerable<string>[] IncorrectPersonNames =
         {
-            [null], 
-            [" "], 
-            [""], 
-            ["1"], 
-            ["abcde12345"], 
+            [null],
+            [" "],
+            [""],
+            ["1"],
+            ["abcde12345"],
             ["        Joe"]
         };
 
         public static void TestCleanup()
         {
             Staff.IDManager = new IDManagement();
-
+            Patient.IDManager = new IDManagement();
         }
 
 
@@ -114,6 +114,12 @@ namespace Project_Testing
     [TestClass]
     public class Hospital_Testing
     {
+        [TestInitialize]
+        public void Initialize()
+        {
+            TestUtilities.TestCleanup();
+        }
+
         [DataTestMethod]
         [DynamicData(nameof(TestUtilities.IncorrectHospitalNames), typeof(TestUtilities))]
         public void Hospital_Constructor_IncorrectNames_Test(string IncorrectHospitalName)
@@ -189,7 +195,7 @@ namespace Project_Testing
             Hospital testHospital = TestUtilities.DefaultHospital_Testing();
 
             testHospital.AddRooms(new List<int>() { 4, 5 });
-            Assert.AreEqual(new List<int>() { 1, 2, 3, 4, 5 }, testHospital.Rooms );
+            Assert.AreEqual(new List<int>() { 1, 2, 3, 4, 5 }, testHospital.Rooms);
             Assert.ThrowsException<ArgumentException>(() => testHospital.AddRooms(new List<int>() { -1, 0 }), "Not checking for incorrect value range"); // 0 and negative room id's are not allowed
             Assert.ThrowsException<ArgumentException>(() => testHospital.AddRooms(new List<int>() { 1 }), "Not checking for overlap"); // overlap is not allowed
             Assert.ThrowsException<ArgumentException>(() => testHospital.AddRooms(new List<int>() { 1, 2 }), "Not checking for overlap");
@@ -231,7 +237,7 @@ namespace Project_Testing
         {
             Hospital testHospital = TestUtilities.DefaultHospital_Testing();
 
-            if(string.IsNullOrEmpty(IncorrectName))
+            if (string.IsNullOrEmpty(IncorrectName))
                 Assert.ThrowsException<NullReferenceException>(() => testHospital.RemoveDepartment(IncorrectName), "Not checking for empty strings");
 
         }
@@ -258,7 +264,7 @@ namespace Project_Testing
         {
             Hospital testHospital = TestUtilities.DefaultHospital_Testing();
 
-            if(string.IsNullOrWhiteSpace(IncorrectName))
+            if (string.IsNullOrWhiteSpace(IncorrectName))
                 Assert.ThrowsException<NullReferenceException>(() => testHospital.AddPatient(IncorrectName, IncorrectName, IncorrectName, DateTime.Now), "Not checking for empty strings");
             else
                 Assert.ThrowsException<ArgumentException>(() => testHospital.AddPatient(IncorrectName, IncorrectName, IncorrectName, DateTime.Now), "Wrong algorithm for checking over name formats");
@@ -384,7 +390,7 @@ namespace Project_Testing
 
         [DataTestMethod]
         [DynamicData(nameof(TestUtilities.IncorrectPersonNames), typeof(TestUtilities))]
-        public void Hospital_AddNewStaffInvalidNames_Test(string incorrectName)
+        public void Hospital_AddNewStaff_InvalidNames(string incorrectName)
         {
             Hospital testHospital = TestUtilities.DefaultHospital_Testing();
 
@@ -393,7 +399,7 @@ namespace Project_Testing
 
         [DataTestMethod]
         [DynamicData(nameof(TestUtilities.CorrectPersonNames), typeof(TestUtilities))]
-        public void Hospital_AddNewStaff_EmptyRoles_Test(string CorrectName)
+        public void Hospital_AddNewStaff_EmptyRoles(string CorrectName)
         {
             Hospital testHospital = TestUtilities.DefaultHospital_Testing();
 
@@ -401,7 +407,7 @@ namespace Project_Testing
         }
 
         [TestMethod]
-        public void Hospital_AddNewStaffValidStaff_Test()
+        public void Hospital_AddNewStaff_ValidStaff()
         {
             Hospital testHospital = TestUtilities.DefaultHospital_Testing();
             testHospital.AddStaff("CorrectName", "CorrectName", "CorrectName", DateTime.Now, new List<StaffRole> { StaffRole.Administrator }, new List<Department>());
@@ -417,13 +423,19 @@ namespace Project_Testing
         public void Hospital_AddExistingStaff_Test(string correctName)
         {
             Hospital testHospital = TestUtilities.DefaultHospital_Testing();
-            testHospital.AddStaff(correctName, correctName, correctName, DateTime.Now, new List<StaffRole> { StaffRole.Administrator }, new List<Department>());
+            testHospital.AddStaff(correctName, correctName, correctName, DateTime.Now, new List<StaffRole> { StaffRole.Administrator });
 
             Assert.AreEqual(1, testHospital.ActiveStaff.Count, "Something wrong with how you add things");
 
-            testHospital.AddStaff(correctName, correctName, correctName, DateTime.Now, new List<StaffRole> { StaffRole.Administrator }, new List<Department>());
+            testHospital.AddStaff(correctName, correctName, correctName, DateTime.Now, new List<StaffRole> { StaffRole.Administrator });
 
             Assert.AreNotEqual(testHospital.ActiveStaff[0].ID, testHospital.ActiveStaff[1].ID, "Staff ID must always stay the same and unique");
+        }
+
+        [TestMethod]
+        public void Hospital_TransferStaff_Test()
+        {
+
         }
 
         [TestMethod]
@@ -445,11 +457,15 @@ namespace Project_Testing
     [TestClass]
     public class Department_Testing
     {
-        Hospital testHospital = TestUtilities.DefaultHospital_Testing();
+        [TestInitialize]
+        public void Initialize()
+        {
+            TestUtilities.TestCleanup();
+        }
 
         [DataTestMethod]
         [DynamicData(nameof(TestUtilities.IncorrectDepartmentNames), typeof(TestUtilities))]
-        public void Department_ConstructorIncorrectNames_Test(string IncorrectNames)
+        public void Department_Constructor_IncorrectNames(string IncorrectNames)
         {
             Hospital testHospital = TestUtilities.DefaultHospital_Testing();
             Assert.ThrowsException<ArgumentException>(() => new Department(testHospital, IncorrectNames, new List<int>() { 1, 2, 3 }), "Not checking format");
@@ -466,7 +482,7 @@ namespace Project_Testing
         }
 
         [TestMethod]
-        public void Department_ChangeHead_Test()
+        public void Department_ChangeHead_InvalidCases()
         {
             Hospital testHospital = TestUtilities.DefaultHospital_Testing();
             testHospital.AddStaff("CorrectName", "CorrectName", "CorrectName", DateTime.Now, new List<StaffRole>() { StaffRole.Administrator }, new List<Department>() { testHospital.Departments[0] });
@@ -518,7 +534,6 @@ namespace Project_Testing
             testHospital.AddStaff("CorrectName", "CorrectName", "CorrectName", DateTime.Now, new List<StaffRole>() { StaffRole.Administrator }, new List<Department>() { testHospital.Departments[0] });
             testHospital.AddStaff("CorrectName", "CorrectName", "CorrectName", DateTime.Now, new List<StaffRole>() { StaffRole.Administrator }, new List<Department>() { testHospital.Departments[1] });
 
-
             Assert.ThrowsException<ArgumentException>(() => testHospital.Departments[0].RemoveStaff(-1), "Not checking for ID range");
             Assert.ThrowsException<ArgumentException>(() => testHospital.Departments[0].RemoveStaff(10), "Not checking for ID range");
             Assert.ThrowsException<ArgumentException>(() => testHospital.Departments[0].RemoveStaff(testHospital.ActiveStaff[0].ID), "Not checking for ID range");
@@ -529,5 +544,197 @@ namespace Project_Testing
 
             Assert.ThrowsException<ArgumentException>(() => testHospital.Departments[0].RemoveStaff(testHospital2.ActiveStaff[0].ID), "Not checking for whether the staff belongs to this hospital");
         }
+
+        [TestMethod]
+        public void Department_TransferStaff_DifferentHospital()
+        {
+            Hospital testHospital = TestUtilities.DefaultHospital_Testing();
+            testHospital.AddDepartment("CorrectName", new List<int>() { 1, 2, 3 });
+            testHospital.AddDepartment("CorrectName2", new List<int>() { 1, 2, 3 });
+            testHospital.AddStaff("CorrectName", "CorrectName", "CorrectName", DateTime.Now, new List<StaffRole>() { StaffRole.Administrator }, new List<Department>() { testHospital.Departments[0] });
+            testHospital.AddStaff("CorrectName", "CorrectName", "CorrectName", DateTime.Now, new List<StaffRole>() { StaffRole.Administrator }, new List<Department>() { testHospital.Departments[1] });
+
+            Assert.AreEqual(2, testHospital.Departments.Count, "Incorrectly adding departments");
+            Assert.AreEqual(2, testHospital.ActiveStaff.Count, "Incorrectly adding staff");
+
+            try { testHospital.Departments[0].TransferStaff(0, testHospital.Departments[1]); }
+            catch { Assert.Fail("Not allowing transfer of staff between departments"); }
+
+            Hospital testHospital2 = TestUtilities.DefaultHospital_Testing();
+            testHospital.AddDepartment("CorrectName", new List<int>() { 1, 2, 3 });
+        }
+    }
+
+    [TestClass]
+    public class IDManagement_Testing
+    {
+
+    }
+
+    [TestClass]
+    public class Staff_Testing
+    {
+        [TestInitialize]
+        public void Initialize()
+        {
+            TestUtilities.TestCleanup();
+        }
+
+        [TestMethod]
+        public void Staff_Constructor_ValidParameters()
+        {
+
+        }
+
+        [TestMethod]
+        public void Staff_Constructor_InvalidParameters()
+        {
+
+        }
+
+        [TestMethod]
+        public void Staff_ChangeRoles_ValidParameters()
+        {
+
+        }
+
+        [TestMethod]
+        public void Staff_ChangeRoles_InvalidParameters()
+        {
+
+        }
+
+        [TestMethod]
+        public void Staff_GetFullName_Test()
+        {
+
+        }
+
+        [TestMethod]
+        public void Staff_ChangeInfo_InvalidParameters()
+        {
+
+        }
+
+        [TestMethod]
+        public void Staff_ToString_Test()
+        {
+
+        }
+    }
+
+    [TestClass]
+    public class Patient_Testing
+    {
+        [TestInitialize]
+        public void Initialize()
+        {
+            TestUtilities.TestCleanup();
+        }
+
+        [TestMethod]
+        public void Patient_Constructor_ValidParameters()
+        {
+
+        }
+
+        [TestMethod]
+        public void Patient_Constructor_InvalidParameters()
+        {
+
+        }
+
+        [TestMethod]
+        public void Patient_AddMedicalRecord_ValidParameters()
+        {
+
+        }
+
+        [TestMethod]
+        public void Patient_AddMedicalRecord_InvalidParameters()
+        {
+
+        }
+
+        [TestMethod]
+        public void Patient_AddAppointment_ValidParameters()
+        {
+
+        }
+
+        [TestMethod]
+        public void Patient_AddAppointment_InvalidParameters()
+        {
+
+        }
+
+        [TestMethod]
+        public void Patient_GetFullName_Test()
+        {
+
+        }
+
+        [TestMethod]
+        public void Patient_ChangeInfo_InvalidParameters()
+        {
+
+        }
+
+        [TestMethod]
+        public void Patient_ToString_Test()
+        {
+
+        }
+    }
+
+    [TestClass]
+    public class MedicalRecord_Testing 
+    {
+        [TestInitialize]
+        public void Initialize()
+        {
+            TestUtilities.TestCleanup();
+        }
+
+        [TestMethod]
+        public void MedicalRecord_Constructor_ValidParameters()
+        {
+
+        }
+
+        [TestMethod]
+        public void MedicalRecord_Constructor_InvalidParameters()
+        {
+
+        }
+
+        [TestMethod]
+        public void MedicalRecord_ToString_Test()
+        {
+
+        }
+    }
+
+    [TestClass]
+    public class AppointmentSchedule_Testing
+    {
+        [TestInitialize]
+        public void Initialize()
+        {
+            TestUtilities.TestCleanup();
+        }
+
+
+    }
+
+    [TestClass]
+    public class Appointment_Testing
+    {
+        [TestInitialize]
+        public void Initialize()
+        {
+            TestUtilities.TestCleanup();
+        }
+
     }
 }
