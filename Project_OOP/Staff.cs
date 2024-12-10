@@ -70,8 +70,19 @@ namespace Project_OOP
         #region Methods - Inherited from the Person interface
         public string GetFullName()
         { throw new NotImplementedException(); }
-        public void ChangeInfo()
+
+        public void ChangeFirstName(string firstName)
         { throw new NotImplementedException(); }
+
+        public void ChangeMiddleName(string middleName)
+        { throw new NotImplementedException(); }
+
+        public void ChangeLastName(string lastName)
+        { throw new NotImplementedException(); }
+
+        public void ChangeBirthDate(DateTime birthDate)
+        { throw new NotImplementedException(); }
+
         public override string ToString()
         { throw new NotImplementedException(); }
         #endregion

@@ -18,7 +18,10 @@ namespace Project_OOP
         public Hospital CurrentHospital { get; set; }
 
         public string GetFullName();
-        public void ChangeInfo();
+        public void ChangeFirstName(string firstName);
+        public void ChangeMiddleName(string middleName);
+        public void ChangeLastName(string lastName);
+        public void ChangeBirthDate(DateTime birthDate);
         public string ToString();
     }
 }
