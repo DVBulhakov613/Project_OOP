@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Project_OOP_WPF\Project_OOP_WPF\Project_OOP_WPF.csproj" />
+    <ProjectReference Include="..\Project_OOP\Project_OOP.csproj" />
   </ItemGroup>
 
   <ItemGroup>

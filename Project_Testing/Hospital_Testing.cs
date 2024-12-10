@@ -655,16 +655,11 @@ namespace Project_Testing
 
             DateTime staffDOB = testStaff.BirthDate;
             DateTime time = DateTime.Now.AddYears(-19);
-            testStaff.ChangeFirstName("DefaultName2");
+
+            testStaff.ChangeInfo("DefaultName2", "DefaultName2", "DefaultName2", time);
             Assert.AreEqual("DefaultName2", testStaff.FirstName, "Not assigning a new first name");
-
-            testStaff.ChangeMiddleName("DefaultName2");
             Assert.AreEqual("DefaultName2", testStaff.MiddleName, "Not assigning a new middle name");
-
-            testStaff.ChangeLastName("DefaultName2");
             Assert.AreEqual("DefaultName2", testStaff.LastName, "Not assigning a new last name");
-
-            testStaff.ChangeBirthDate(DateTime.Now.AddYears(-20));
             Assert.AreNotEqual(staffDOB, testStaff.BirthDate, "Not assigning a new date of birth");
         }
 
@@ -871,7 +866,7 @@ namespace Project_Testing
             Patient testPatient = TestUtilities.DefaultPatient_Testing(testHospital);
 
             DateTime time = DateTime.Now.AddDays(2); // shouldnt be able to make appointments 
-            testPatient.AddAppointment(1, time, new List<int>() { 0 }, AppointmentPurpose.Consultation);
+            testPatient.AddAppointment(1, time, testHospital.ActiveStaff, AppointmentPurpose.Consultation);
             Assert.AreEqual<int>(1, testPatient.Schedule.Appointments.Count, "Not creating appointments correctly");
             Assert.AreEqual(time, testPatient.Schedule.Appointments[0].Time, "Not assigning time correctly");
         }
@@ -883,13 +878,13 @@ namespace Project_Testing
             testHospital.AddStaff(new Staff("CorrectName", "CorrectName", "CorrectName", DateTime.Now, new List<StaffRole> { StaffRole.Administrator }, testHospital));
             Patient testPatient = TestUtilities.DefaultPatient_Testing(testHospital);
 
-            Assert.ThrowsException<NullReferenceException>(() => testPatient.AddAppointment(0, DateTime.Now.AddDays(2), new List<int>() { 0 }, AppointmentPurpose.Consultation), "Room does not exist");
-            Assert.ThrowsException<NullReferenceException>(() => testPatient.AddAppointment(-1, DateTime.Now.AddDays(2), new List<int>() { 0 }, AppointmentPurpose.Consultation), "Room does not exist");
-            Assert.ThrowsException<NullReferenceException>(() => testPatient.AddAppointment(10, DateTime.Now.AddDays(2), new List<int>() { 0 }, AppointmentPurpose.Consultation), "Room does not exist");
-            Assert.ThrowsException<NullReferenceException>(() => testPatient.AddAppointment(1, DateTime.Now.AddDays(2), new List<int>() { 10 }, AppointmentPurpose.Consultation), "Staff does not exist");
-            Assert.ThrowsException<ArgumentException>(() => testPatient.AddAppointment(1, DateTime.Now, new List<int>() { 0 }, AppointmentPurpose.Consultation), "Incorrect time range");
-            Assert.ThrowsException<ArgumentException>(() => testPatient.AddAppointment(1, DateTime.Now.AddDays(-1), new List<int>() { 0 }, AppointmentPurpose.Consultation), "Negative time range");
-            Assert.ThrowsException<ArgumentException>(() => testPatient.AddAppointment(1, DateTime.Now.AddMonths(3), new List<int>() { 0 }, AppointmentPurpose.Consultation), "Too high of a time range");
+            Assert.ThrowsException<NullReferenceException>(() => testPatient.AddAppointment(0, DateTime.Now.AddDays(2), testHospital.ActiveStaff, AppointmentPurpose.Consultation), "Room does not exist");
+            Assert.ThrowsException<NullReferenceException>(() => testPatient.AddAppointment(-1, DateTime.Now.AddDays(2), testHospital.ActiveStaff, AppointmentPurpose.Consultation), "Room does not exist");
+            Assert.ThrowsException<NullReferenceException>(() => testPatient.AddAppointment(10, DateTime.Now.AddDays(2), testHospital.ActiveStaff, AppointmentPurpose.Consultation), "Room does not exist");
+            Assert.ThrowsException<NullReferenceException>(() => testPatient.AddAppointment(1, DateTime.Now.AddDays(2), testHospital.ActiveStaff, AppointmentPurpose.Consultation), "Staff does not exist");
+            Assert.ThrowsException<ArgumentException>(() => testPatient.AddAppointment(1, DateTime.Now, testHospital.ActiveStaff, AppointmentPurpose.Consultation), "Incorrect time range");
+            Assert.ThrowsException<ArgumentException>(() => testPatient.AddAppointment(1, DateTime.Now.AddDays(-1), testHospital.ActiveStaff, AppointmentPurpose.Consultation), "Negative time range");
+            Assert.ThrowsException<ArgumentException>(() => testPatient.AddAppointment(1, DateTime.Now.AddMonths(3), testHospital.ActiveStaff, AppointmentPurpose.Consultation), "Too high of a time range");
         }
 
         [TestMethod]
