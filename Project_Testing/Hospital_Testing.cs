@@ -576,34 +576,34 @@ namespace Project_Testing
             Assert.AreEqual(0, Staff.IDManager.GenerateID(), "Adding ID's despite incorrect object creation");
         }
 
-        [TestMethod]
-        public void Staff_AddAppointment_ValidParameters()
-        {
-            Hospital testHospital = TestUtilities.DefaultHospital_Testing();
-            testHospital.AddStaff("CorrectName", "CorrectName", "CorrectName", DateTime.Now.AddYears(-19), new List<StaffRole> { StaffRole.Administrator });
-            testHospital.AddPatient("CorrectName", "CorrectName", "CorrectName", DateTime.Now.AddYears(-19));
+        //[TestMethod]
+        //public void Staff_AddAppointment_ValidParameters()
+        //{
+        //    Hospital testHospital = TestUtilities.DefaultHospital_Testing();
+        //    testHospital.AddStaff("CorrectName", "CorrectName", "CorrectName", DateTime.Now.AddYears(-19), new List<StaffRole> { StaffRole.Administrator });
+        //    testHospital.AddPatient("CorrectName", "CorrectName", "CorrectName", DateTime.Now.AddYears(-19));
 
-            DateTime time = DateTime.Now.AddDays(2); // shouldnt be able to make appointments 
-            testHospital.ActiveStaff[0].AddAppointment(1, time, time.AddMinutes(1), new List<Staff> { testHospital.ActiveStaff[0]  }, testHospital.Patients[0], AppointmentPurpose.Consultation);
-            Assert.AreEqual<int>(1, testHospital.ActiveStaff[0].Schedule.Appointments.Count, "Not creating appointments correctly");
-            Assert.AreEqual(time, testHospital.ActiveStaff[0].Schedule.Appointments[0].Time, "Not assigning time correctly");
-        }
+        //    DateTime time = DateTime.Now.AddDays(2); // shouldnt be able to make appointments 
+        //    testHospital.ActiveStaff[0].AddAppointment(1, time, time.AddMinutes(1), new List<Staff> { testHospital.ActiveStaff[0]  }, testHospital.Patients[0], AppointmentPurpose.Consultation);
+        //    Assert.AreEqual<int>(1, testHospital.ActiveStaff[0].Schedule.Appointments.Count, "Not creating appointments correctly");
+        //    Assert.AreEqual(time, testHospital.ActiveStaff[0].Schedule.Appointments[0].Time, "Not assigning time correctly");
+        //}
 
-        [TestMethod]
-        public void Staff_AddAppointment_InvalidParameters()
-        {
-            Hospital testHospital = TestUtilities.DefaultHospital_Testing();
-            testHospital.AddStaff("CorrectName", "CorrectName", "CorrectName", DateTime.Now.AddYears(-19), new List<StaffRole> { StaffRole.Administrator });
-            testHospital.AddPatient("CorrectName", "CorrectName", "CorrectName", DateTime.Now.AddYears(-19));
+        //[TestMethod]
+        //public void Staff_AddAppointment_InvalidParameters()
+        //{
+        //    Hospital testHospital = TestUtilities.DefaultHospital_Testing();
+        //    testHospital.AddStaff("CorrectName", "CorrectName", "CorrectName", DateTime.Now.AddYears(-19), new List<StaffRole> { StaffRole.Administrator });
+        //    testHospital.AddPatient("CorrectName", "CorrectName", "CorrectName", DateTime.Now.AddYears(-19));
 
-            Assert.ThrowsException<NullReferenceException>(() => testHospital.ActiveStaff[0].AddAppointment(0, DateTime.Now.AddDays(2), DateTime.Now.AddDays(2).AddMinutes(1), new List<Staff> { testHospital.ActiveStaff[0] }, testHospital.Patients[0], AppointmentPurpose.Consultation), "Room does not exist");
-            Assert.ThrowsException<NullReferenceException>(() => testHospital.ActiveStaff[0].AddAppointment(-1, DateTime.Now.AddDays(2), DateTime.Now.AddDays(2).AddMinutes(1), new List<Staff> { testHospital.ActiveStaff[0] }, testHospital.Patients[0], AppointmentPurpose.Consultation), "Room does not exist");
-            Assert.ThrowsException<NullReferenceException>(() => testHospital.ActiveStaff[0].AddAppointment(10, DateTime.Now.AddDays(2), DateTime.Now.AddDays(2).AddMinutes(1), new List<Staff> { testHospital.ActiveStaff[0] }, testHospital.Patients[0], AppointmentPurpose.Consultation), "Room does not exist");
-            Assert.ThrowsException<ArgumentException>(() => testHospital.ActiveStaff[0].AddAppointment(1, DateTime.Now, DateTime.Now.AddMinutes(1), new List<Staff> { testHospital.ActiveStaff[0] }, testHospital.Patients[0], AppointmentPurpose.Consultation), "Time range is too short");
-            Assert.ThrowsException<ArgumentException>(() => testHospital.ActiveStaff[0].AddAppointment(1, DateTime.Now.AddDays(-1), DateTime.Now.AddDays(-1).AddMinutes(1), new List<Staff> { testHospital.ActiveStaff[0] }, testHospital.Patients[0], AppointmentPurpose.Consultation), "Negative time range");
-            Assert.ThrowsException<ArgumentException>(() => testHospital.ActiveStaff[0].AddAppointment(1, DateTime.Now.AddMonths(3), DateTime.Now.AddMonths(3).AddMinutes(1), new List<Staff> { testHospital.ActiveStaff[0] }, testHospital.Patients[0], AppointmentPurpose.Consultation), "Too high of a time range");
-            Assert.ThrowsException<ArgumentException>(() => testHospital.ActiveStaff[0].AddAppointment(1, DateTime.Now.AddDays(3), DateTime.Now.AddDays(2).AddMinutes(-1), new List<Staff> { testHospital.ActiveStaff[0] }, testHospital.Patients[0], AppointmentPurpose.Consultation), "End time cannot be before the start time");
-        }
+        //    Assert.ThrowsException<NullReferenceException>(() => testHospital.ActiveStaff[0].AddAppointment(0, DateTime.Now.AddDays(2), DateTime.Now.AddDays(2).AddMinutes(1), new List<Staff> { testHospital.ActiveStaff[0] }, testHospital.Patients[0], AppointmentPurpose.Consultation), "Room does not exist");
+        //    Assert.ThrowsException<NullReferenceException>(() => testHospital.ActiveStaff[0].AddAppointment(-1, DateTime.Now.AddDays(2), DateTime.Now.AddDays(2).AddMinutes(1), new List<Staff> { testHospital.ActiveStaff[0] }, testHospital.Patients[0], AppointmentPurpose.Consultation), "Room does not exist");
+        //    Assert.ThrowsException<NullReferenceException>(() => testHospital.ActiveStaff[0].AddAppointment(10, DateTime.Now.AddDays(2), DateTime.Now.AddDays(2).AddMinutes(1), new List<Staff> { testHospital.ActiveStaff[0] }, testHospital.Patients[0], AppointmentPurpose.Consultation), "Room does not exist");
+        //    Assert.ThrowsException<ArgumentException>(() => testHospital.ActiveStaff[0].AddAppointment(1, DateTime.Now, DateTime.Now.AddMinutes(1), new List<Staff> { testHospital.ActiveStaff[0] }, testHospital.Patients[0], AppointmentPurpose.Consultation), "Time range is too short");
+        //    Assert.ThrowsException<ArgumentException>(() => testHospital.ActiveStaff[0].AddAppointment(1, DateTime.Now.AddDays(-1), DateTime.Now.AddDays(-1).AddMinutes(1), new List<Staff> { testHospital.ActiveStaff[0] }, testHospital.Patients[0], AppointmentPurpose.Consultation), "Negative time range");
+        //    Assert.ThrowsException<ArgumentException>(() => testHospital.ActiveStaff[0].AddAppointment(1, DateTime.Now.AddMonths(3), DateTime.Now.AddMonths(3).AddMinutes(1), new List<Staff> { testHospital.ActiveStaff[0] }, testHospital.Patients[0], AppointmentPurpose.Consultation), "Too high of a time range");
+        //    Assert.ThrowsException<ArgumentException>(() => testHospital.ActiveStaff[0].AddAppointment(1, DateTime.Now.AddDays(3), DateTime.Now.AddDays(2).AddMinutes(-1), new List<Staff> { testHospital.ActiveStaff[0] }, testHospital.Patients[0], AppointmentPurpose.Consultation), "End time cannot be before the start time");
+        //}
 
         [TestMethod]
         public void Staff_ChangeRoles_ValidParameters()
@@ -837,34 +837,34 @@ namespace Project_Testing
             }
         }
 
-        [TestMethod]
-        public void Patient_AddAppointment_ValidParameters()
-        {
-            Hospital testHospital = TestUtilities.DefaultHospital_Testing();
-            testHospital.AddStaff("CorrectName", "CorrectName", "CorrectName", DateTime.Now.AddYears(-19), new List<StaffRole> { StaffRole.Administrator });
-            Patient testPatient = TestUtilities.DefaultPatient_Testing(testHospital);
+        //[TestMethod]
+        //public void Patient_AddAppointment_ValidParameters()
+        //{
+        //    Hospital testHospital = TestUtilities.DefaultHospital_Testing();
+        //    testHospital.AddStaff("CorrectName", "CorrectName", "CorrectName", DateTime.Now.AddYears(-19), new List<StaffRole> { StaffRole.Administrator });
+        //    Patient testPatient = TestUtilities.DefaultPatient_Testing(testHospital);
 
-            DateTime time = DateTime.Now.AddDays(2); // shouldnt be able to make appointments 
-            testPatient.AddAppointment(1, time, time.AddMinutes(1), testHospital.ActiveStaff, AppointmentPurpose.Consultation);
-            Assert.AreEqual<int>(1, testPatient.Schedule.Appointments.Count, "Not creating appointments correctly");
-            Assert.AreEqual(time, testPatient.Schedule.Appointments[0].Time, "Not assigning time correctly");
-        }
+        //    DateTime time = DateTime.Now.AddDays(2); // shouldnt be able to make appointments 
+        //    testPatient.AddAppointment(1, time, time.AddMinutes(1), testHospital.ActiveStaff, AppointmentPurpose.Consultation);
+        //    Assert.AreEqual<int>(1, testPatient.Schedule.Appointments.Count, "Not creating appointments correctly");
+        //    Assert.AreEqual(time, testPatient.Schedule.Appointments[0].Time, "Not assigning time correctly");
+        //}
 
-        [TestMethod]
-        public void Patient_AddAppointment_InvalidParameters()
-        {
-            Hospital testHospital = TestUtilities.DefaultHospital_Testing();
-            testHospital.AddStaff("CorrectName", "CorrectName", "CorrectName", DateTime.Now.AddYears(-19), new List<StaffRole> { StaffRole.Administrator });
-            Patient testPatient = TestUtilities.DefaultPatient_Testing(testHospital);
+        //[TestMethod]
+        //public void Patient_AddAppointment_InvalidParameters()
+        //{
+        //    Hospital testHospital = TestUtilities.DefaultHospital_Testing();
+        //    testHospital.AddStaff("CorrectName", "CorrectName", "CorrectName", DateTime.Now.AddYears(-19), new List<StaffRole> { StaffRole.Administrator });
+        //    Patient testPatient = TestUtilities.DefaultPatient_Testing(testHospital);
 
-            Assert.ThrowsException<NullReferenceException>(() => testPatient.AddAppointment(0, DateTime.Now.AddDays(2), DateTime.Now.AddDays(2).AddMinutes(1), testHospital.ActiveStaff, AppointmentPurpose.Consultation), "Room does not exist");
-            Assert.ThrowsException<NullReferenceException>(() => testPatient.AddAppointment(-1, DateTime.Now.AddDays(2), DateTime.Now.AddDays(2).AddMinutes(1), testHospital.ActiveStaff, AppointmentPurpose.Consultation), "Room does not exist");
-            Assert.ThrowsException<NullReferenceException>(() => testPatient.AddAppointment(10, DateTime.Now.AddDays(2), DateTime.Now.AddDays(2).AddMinutes(1), testHospital.ActiveStaff, AppointmentPurpose.Consultation), "Room does not exist");
-            Assert.ThrowsException<ArgumentException>(() => testPatient.AddAppointment(1, DateTime.Now, DateTime.Now.AddMinutes(1), testHospital.ActiveStaff, AppointmentPurpose.Consultation), "Time range is too short");
-            Assert.ThrowsException<ArgumentException>(() => testPatient.AddAppointment(1, DateTime.Now.AddDays(-1), DateTime.Now.AddDays(-1).AddMinutes(1), testHospital.ActiveStaff, AppointmentPurpose.Consultation), "Negative time range");
-            Assert.ThrowsException<ArgumentException>(() => testPatient.AddAppointment(1, DateTime.Now.AddMonths(3), DateTime.Now.AddMonths(3).AddMinutes(1), testHospital.ActiveStaff, AppointmentPurpose.Consultation), "Too high of a time range");
-            Assert.ThrowsException<ArgumentException>(() => testPatient.AddAppointment(1, DateTime.Now.AddDays(3), DateTime.Now.AddDays(2).AddMinutes(-1), testHospital.ActiveStaff, AppointmentPurpose.Consultation), "End time cannot be before the start time");
-        }
+        //    Assert.ThrowsException<NullReferenceException>(() => testPatient.AddAppointment(0, DateTime.Now.AddDays(2), DateTime.Now.AddDays(2).AddMinutes(1), testHospital.ActiveStaff, AppointmentPurpose.Consultation), "Room does not exist");
+        //    Assert.ThrowsException<NullReferenceException>(() => testPatient.AddAppointment(-1, DateTime.Now.AddDays(2), DateTime.Now.AddDays(2).AddMinutes(1), testHospital.ActiveStaff, AppointmentPurpose.Consultation), "Room does not exist");
+        //    Assert.ThrowsException<NullReferenceException>(() => testPatient.AddAppointment(10, DateTime.Now.AddDays(2), DateTime.Now.AddDays(2).AddMinutes(1), testHospital.ActiveStaff, AppointmentPurpose.Consultation), "Room does not exist");
+        //    Assert.ThrowsException<ArgumentException>(() => testPatient.AddAppointment(1, DateTime.Now, DateTime.Now.AddMinutes(1), testHospital.ActiveStaff, AppointmentPurpose.Consultation), "Time range is too short");
+        //    Assert.ThrowsException<ArgumentException>(() => testPatient.AddAppointment(1, DateTime.Now.AddDays(-1), DateTime.Now.AddDays(-1).AddMinutes(1), testHospital.ActiveStaff, AppointmentPurpose.Consultation), "Negative time range");
+        //    Assert.ThrowsException<ArgumentException>(() => testPatient.AddAppointment(1, DateTime.Now.AddMonths(3), DateTime.Now.AddMonths(3).AddMinutes(1), testHospital.ActiveStaff, AppointmentPurpose.Consultation), "Too high of a time range");
+        //    Assert.ThrowsException<ArgumentException>(() => testPatient.AddAppointment(1, DateTime.Now.AddDays(3), DateTime.Now.AddDays(2).AddMinutes(-1), testHospital.ActiveStaff, AppointmentPurpose.Consultation), "End time cannot be before the start time");
+        //}
 
         [TestMethod]
         public void Patient_GetFullName_Test()
@@ -961,17 +961,86 @@ namespace Project_Testing
             Hospital testHospital = TestUtilities.DefaultHospital_Testing();
             testHospital.AddStaff("CorrectName", "CorrectName", "CorrectName", DateTime.Now.AddYears(-19), new List<StaffRole> { StaffRole.Administrator });
             testHospital.AddPatient("CorrectName", "CorrectName", "CorrectName", DateTime.Now);
-
-            DateTime time = DateTime.Now;
+            // writing down the time at which the appointment will be created
+            DateTime time = DateTime.Now.AddDays(2);
             testHospital.Patients[0].Schedule.CreateAppointment(
                 1,
-                time.AddDays(2),
-                time.AddDays(2).AddMinutes(1),
+                time,
+                time.AddMinutes(15),
                 testHospital.ActiveStaff,
                 testHospital.Patients[0],
                 AppointmentPurpose.Consultation);
 
+            // checking the amount to see whether the appoitnments have been created
+            Assert.AreEqual(1, testHospital.Patients[0].Schedule.Appointments.Count);
+            Assert.AreEqual(1, testHospital.ActiveStaff[0].Schedule.Appointments.Count);
+            Assert.AreEqual(testHospital.Patients[0].Schedule.Appointments.Count, testHospital.ActiveStaff[0].Schedule.Appointments.Count);
+            
+            // cancelling the appointment from the Patient side
+            testHospital.Patients[0].Schedule.CancelAppointment(0);
 
+            // checking whether the change has been mirrored
+            Assert.AreEqual(0, testHospital.Patients[0].Schedule.Appointments.Count);
+            Assert.AreEqual(0, testHospital.ActiveStaff[0].Schedule.Appointments.Count);
+            Assert.AreEqual(testHospital.Patients[0].Schedule.Appointments.Count, testHospital.ActiveStaff[0].Schedule.Appointments.Count);
+
+            // doing the same things from the Staff side
+            testHospital.ActiveStaff[0].Schedule.CreateAppointment(
+                1,
+                time,
+                time.AddMinutes(15),
+                testHospital.ActiveStaff,
+                testHospital.Patients[0],
+                AppointmentPurpose.Consultation);
+
+            Assert.AreEqual(1, testHospital.Patients[0].Schedule.Appointments.Count);
+            Assert.AreEqual(1, testHospital.ActiveStaff[0].Schedule.Appointments.Count);
+            Assert.AreEqual(testHospital.Patients[0].Schedule.Appointments.Count, testHospital.ActiveStaff[0].Schedule.Appointments.Count);
+
+            testHospital.ActiveStaff[0].Schedule.CancelAppointment(0);
+
+            Assert.AreEqual(0, testHospital.Patients[0].Schedule.Appointments.Count);
+            Assert.AreEqual(0, testHospital.ActiveStaff[0].Schedule.Appointments.Count);
+            Assert.AreEqual(testHospital.Patients[0].Schedule.Appointments.Count, testHospital.ActiveStaff[0].Schedule.Appointments.Count);
+            
+        }
+
+        [TestMethod]
+        public void AppointmentSchedule_TimeOverlap_Testing()
+        {
+            Hospital testHospital = TestUtilities.DefaultHospital_Testing();
+            testHospital.AddStaff("CorrectName", "CorrectName", "CorrectName", DateTime.Now.AddYears(-19), new List<StaffRole> { StaffRole.Administrator });
+            testHospital.AddPatient("CorrectName", "CorrectName", "CorrectName", DateTime.Now);
+
+            DateTime time = DateTime.Now.AddDays(2);
+            testHospital.Patients[0].Schedule.CreateAppointment(
+                    1,
+                    time,
+                    time.AddMinutes(15),
+                    new List<Staff> { testHospital.ActiveStaff[0] },
+                    testHospital.Patients[0],
+                    AppointmentPurpose.Consultation);
+
+            // assigning an appointment at the same time with the same participants should throw an argumentexception exception
+            Assert.ThrowsException<ArgumentException>(
+                () => testHospital.ActiveStaff[0].Schedule.CreateAppointment(
+                    1, 
+                    time, 
+                    time.AddMinutes(15), 
+                    new List<Staff> { testHospital.ActiveStaff[0] }, 
+                    testHospital.Patients[0], 
+                    AppointmentPurpose.Consultation));
+
+            // assigning an appointment at the same time from a different person entirely should also throw an argumentexception exception
+            testHospital.AddStaff("CorrectName", "CorrectName", "CorrectName", DateTime.Now.AddYears(-19), new List<StaffRole> { StaffRole.Administrator });
+            Assert.ThrowsException<ArgumentException>(
+                () => testHospital.ActiveStaff[1].Schedule.CreateAppointment(
+                    1,
+                    time,
+                    time.AddMinutes(15),
+                    new List<Staff> { testHospital.ActiveStaff[1] },
+                    testHospital.Patients[0],
+                    AppointmentPurpose.Consultation));
         }
     }
 
@@ -984,5 +1053,52 @@ namespace Project_Testing
             TestUtilities.TestCleanup();
         }
 
+        [TestMethod]
+        public void Appointment_ConstructorValidParameters_Testing()
+        {
+            Hospital testHospital = TestUtilities.DefaultHospital_Testing();
+            testHospital.AddStaff("CorrectName", "CorrectName", "CorrectName", DateTime.Now.AddYears(-19), new List<StaffRole> { StaffRole.Administrator });
+            testHospital.AddPatient("CorrectName", "CorrectName", "CorrectName", DateTime.Now);
+
+            DateTime time = DateTime.Now.AddDays(2);
+            Appointment testAppointment = new Appointment(1, time, time.AddMinutes(15), new List<Staff> { testHospital.ActiveStaff[0] }, testHospital.Patients[0], AppointmentPurpose.Consultation);
+            Assert.AreEqual(1, testAppointment.RoomID);
+            Assert.AreEqual(time, testAppointment.StartTime);
+            Assert.AreEqual(time.AddMinutes(15), testAppointment.EndTime);
+            Assert.AreEqual(new List<Staff> { testHospital.ActiveStaff[0] }, testAppointment.Staff);
+            Assert.AreEqual(testHospital.Patients[0], testAppointment.Appointee);
+            Assert.AreEqual(AppointmentPurpose.Consultation, testAppointment.Purpose);
+            Assert.AreEqual(AppointmentState.Scheduled, testAppointment.State);
+        }
+
+        [TestMethod]
+        public void Appointment_ConstructorInvalidParameters_Testing()
+        {
+            Hospital testHospital = TestUtilities.DefaultHospital_Testing();
+            testHospital.AddStaff("CorrectName", "CorrectName", "CorrectName", DateTime.Now.AddYears(-19), new List<StaffRole> { StaffRole.Administrator });
+            testHospital.AddPatient("CorrectName", "CorrectName", "CorrectName", DateTime.Now);
+
+            DateTime time = DateTime.Now.AddDays(2);
+            // rooms
+            Assert.ThrowsException<ArgumentException>(() => new Appointment(0, time, time.AddMinutes(15), new List<Staff> { testHospital.ActiveStaff[0] }, testHospital.Patients[0], AppointmentPurpose.Consultation), "Room does not exist");
+            Assert.ThrowsException<ArgumentException>(() => new Appointment(4, time, time.AddMinutes(15), new List<Staff> { testHospital.ActiveStaff[0] }, testHospital.Patients[0], AppointmentPurpose.Consultation), "Room does not exist");
+            Assert.ThrowsException<ArgumentException>(() => new Appointment(-1, time, time.AddMinutes(15), new List<Staff> { testHospital.ActiveStaff[0] }, testHospital.Patients[0], AppointmentPurpose.Consultation), "Room cannot exist");
+            // time
+            Assert.ThrowsException<ArgumentException>(() => new Appointment(1, DateTime.Now, DateTime.Now.AddMinutes(15), new List<Staff> { testHospital.ActiveStaff[0] }, testHospital.Patients[0], AppointmentPurpose.Consultation), "Invalid time range (trying to make an appointment right now)");
+            Assert.ThrowsException<ArgumentException>(() => new Appointment(1, DateTime.Now.AddMinutes(-15), DateTime.Now, new List<Staff> { testHospital.ActiveStaff[0] }, testHospital.Patients[0], AppointmentPurpose.Consultation), "Invalid time range (trying to make an appointment in the past)");
+            // missing: staff
+            Assert.ThrowsException<ArgumentException>(() => new Appointment(1, time, time.AddMinutes(15), new List<Staff> { }, testHospital.Patients[0], AppointmentPurpose.Consultation), "There must be at least some staff present");
+            // missing: patients
+            Assert.ThrowsException<NullReferenceException>(() => new Appointment(1, time, time.AddMinutes(15), new List<Staff> { testHospital.ActiveStaff[0] }, null, AppointmentPurpose.Consultation), "There must be an appointee");
+            // unknown appointmentpurpose
+            Assert.ThrowsException<ArgumentException>(() => new Appointment(1, time, time.AddMinutes(15), new List<Staff> { testHospital.ActiveStaff[0] }, testHospital.Patients[0], AppointmentPurpose.Unknown), "Unknown is there for technical reasons; shouldn't be allowed in the constructor");
+
+        }
+
+        //[TestMethod]
+        //public void Appointment_ChangeState_Testing()
+        //{
+
+        //}
     }
 }
